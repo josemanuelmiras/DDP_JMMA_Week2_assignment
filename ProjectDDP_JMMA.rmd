@@ -1,0 +1,42 @@
+---
+title: "The Top 6 Largest Cities in Galicia (NW Spain) according to population"
+author: "José Manuel Mirás-Avalos"
+date: "June 5, 2020"
+output: html_document
+runtime: shiny
+---
+
+# Background and explanations
+
+This map represents the locations of the 6 most populated cities in Galicia, a region in the northwest of Spain. Data were collected from the *Wikipedia* website (https://es.wikipedia.org/wiki/Galicia) from each of the represented cities, and referred to the official census from 2019.
+
+The markers consist of the coat of arms of the region, while the circles represent the population of each city (larger circles indicate higher number of inhabitants). 
+
+When you click on the icon a popup appears with the name of the city, which contains a link to the website of the tourist office of that particular city.
+
+The code for generating the map using the *leaflet* package of *R* is also included.
+
+Hope you like it!
+
+```{r, message=FALSE, warning=FALSE}
+library(leaflet)
+md_cities <- data.frame(name = c("A Coruña", "Santiago de Compostela", "Lugo", "Ourense", "Vigo", "Pontevedra"),
+                        pop = c(245711, 97260, 98276, 105233, 295364, 83029),
+                        lat = c(43.365545, 42.880515, 43.011552, 42.339746, 42.239326, 42.430767),
+                        lng = c(-8.409641, -8.544645, -7.556164, -7.863486, -8.725835, -8.643655),
+                        col = c("blue", "grey", "green", "red", "orange", "black"))
+Galicia_sites <- c(
+  "<a href = 'http://www.turismocoruna.com/web/'> A Coruña </a>",
+  "<a href = 'https://www.santiagoturismo.com/'> Santiago de Compostela </a>", 
+  "<a href = 'https://www.turismo.gal/que-visitar/cidades/lugo?langId=es_ES'> Lugo </a>", 
+  "<a href = 'https://www.turismodeourense.gal/'> Ourense </a>",
+  "<a href = 'http://www.turismodevigo.org/'> Vigo </a>", 
+  "<a href = 'https://www.turismo.gal/que-visitar/cidades/pontevedra?langId=es_ES'> Pontevedra </a>")
+
+Galicia_Icon <- makeIcon(iconUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Escudo_de_Galicia_2.svg/800px-Escudo_de_Galicia_2.svg.png", iconWidth = 31*215/230, iconHeight = 31, iconAnchorX = 31*215/230, iconAnchorY = 16)
+
+
+md_cities %>% leaflet() %>% 
+  addTiles() %>% addMarkers(icon = Galicia_Icon, popup = Galicia_sites) %>% addCircles(weight = 5, radius = sqrt(md_cities$pop)*35, color = md_cities$col)
+```
+
